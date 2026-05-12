@@ -1,6 +1,5 @@
-package com.example.order_service.dto.request;
+package com.example.order_service.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -9,17 +8,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateOderItemReq {
+public class OrderItemDTO {
     @NotNull
     @Positive
     private Integer quantity ;
 
-    @NotNull
-    @Positive
-    private Integer price ;
-
-    @NotEmpty
-    private String orderId ;
     @NotEmpty
     private String productId ;
 }

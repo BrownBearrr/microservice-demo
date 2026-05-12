@@ -1,7 +1,7 @@
 package com.example.order_service.controller;
 
 import com.example.order_service.dto.BaseResponse;
-import com.example.order_service.dto.request.CreateOderItemReq;
+import com.example.order_service.dto.OrderItemDTO;
 import com.example.order_service.entity.OrderItem;
 import com.example.order_service.service.OrderItemService;
 import jakarta.validation.Valid;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 public class OrderItemController {
     private final OrderItemService orderItemService ;
 
-    @PostMapping
-    public ResponseEntity<BaseResponse<OrderItem>> create( @RequestBody @Valid CreateOderItemReq req) {
-        return ResponseEntity.ok().body(new BaseResponse<>(orderItemService.create(req),"create order item success"))  ;
-    }
+//    @PostMapping
+//    public ResponseEntity<BaseResponse<OrderItem>> create( @RequestBody @Valid OrderItemDTO req) {
+//        return ResponseEntity.ok().body(new BaseResponse<>(orderItemService.create(req),"create order item success"))  ;
+//    }
 
     @GetMapping
     public ResponseEntity<BaseResponse> getAll() {

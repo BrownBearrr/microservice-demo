@@ -1,6 +1,6 @@
 package com.example.order_service.service.impl;
 
-import com.example.order_service.dto.request.CreateOderItemReq;
+import com.example.order_service.dto.OrderItemDTO;
 import com.example.order_service.entity.Order;
 import com.example.order_service.entity.OrderItem;
 import com.example.order_service.exception.ApplicationException;
@@ -18,22 +18,22 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OrderItemServiceImpl implements OrderItemService {
+public class OrderItemServiceImpl implements OrderItemService  {
     private final OrderItemRepository orderItemRepository;
     private final OrderRepository orderRepository;
     private final OrderItemMapper orderItemMapper;
 
 
-    @Override
-    public OrderItem create(CreateOderItemReq createOderItemReq) {
-        var existedOrderOptional = orderRepository.findById(createOderItemReq.getOrderId());
-        if (existedOrderOptional.isEmpty()) {
-            throw new ApplicationException("order not found");
-        }
-        OrderItem creatingOrderItem = orderItemMapper.fromCreateRequest(createOderItemReq);
-        creatingOrderItem.setOrder(existedOrderOptional.get());
-        return orderItemRepository.save(creatingOrderItem);
-    }
+//    @Override
+//    public OrderItem create(OrderItemDTO createOderItemReq) {
+//        var existedOrderOptional = orderRepository.findById(createOderItemReq.getOrderId());
+//        if (existedOrderOptional.isEmpty()) {
+//            throw new ApplicationException("order not found");
+//        }
+//        OrderItem creatingOrderItem = orderItemMapper.fromCreateRequest(createOderItemReq);
+//        creatingOrderItem.setOrder(existedOrderOptional.get());
+//        return orderItemRepository.save(creatingOrderItem);
+//    }
 
     @Override
     public List<OrderItem> getAll() {

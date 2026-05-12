@@ -2,6 +2,7 @@ package com.example.product_service.controller;
 
 import com.example.product_service.dto.BaseResponse;
 import com.example.product_service.dto.request.CreateProductReq;
+import com.example.product_service.dto.request.ProductFilter;
 import com.example.product_service.entity.BaseEntity;
 import com.example.product_service.entity.Product;
 import com.example.product_service.service.ProductService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +27,20 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<BaseResponse<Product>> create(@RequestBody @Valid CreateProductReq createProductReq) {
         return ResponseEntity.ok(new BaseResponse<>(productService.create(createProductReq) , "succeess")) ;
+    }
 
+    @PostMapping("/search")
+    public ResponseEntity<BaseResponse<List<Product>>> search(@RequestBody ProductFilter productFilter) {
+        List<Product> products = productService.search(productFilter);
+        return ResponseEntity.ok(new BaseResponse<>(products, "Search products success"));
     }
 }
+
+
+
+
+
+
+
+
+

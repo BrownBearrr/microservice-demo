@@ -1,6 +1,7 @@
 package com.example.product_service.service.impl;
 
 import com.example.product_service.dto.request.CreateProductReq;
+import com.example.product_service.dto.request.ProductFilter;
 import com.example.product_service.entity.Product;
 import com.example.product_service.exception.ApplicationException;
 import com.example.product_service.mapper.ProductMapper;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -35,9 +37,14 @@ public class  ProductServiceImpl implements ProductService {
 
         // jpa auditiung
 
-//        creatingProduct.setCreatedDate(Instant.now());
-//        creatingProduct.setLastModifiedDate(Instant.now());
+//     creatingProduct.setCreatedDate(Instant.now());
+//     creatingProduct.setLastModifiedDate(Instant.now());
         return productRepository.save(creatingProduct) ;
 
+    }
+
+    @Override
+    public List<Product> search(ProductFilter productFilter) {
+        return productRepository.findByIdIn(productFilter.getIds()) ;
     }
 }

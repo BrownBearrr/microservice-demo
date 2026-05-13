@@ -2,6 +2,7 @@ package com.example.order_service.client.impl;
 
 import com.example.order_service.client.ProductClient;
 import com.example.order_service.dto.BaseResponse;
+import com.example.order_service.dto.OrderItemDTO;
 import com.example.order_service.dto.ProductDTO;
 import com.example.order_service.dto.request.ProductFilter;
 import com.example.order_service.entity.BaseEntity;
@@ -37,5 +38,22 @@ public class ProductClientImpl implements ProductClient {
             throw new ApplicationException("Không lấy đươc thông tin sản phẩm") ;
         }
         return response.getData();
+    }
+
+    @Override
+    public void lockProducts(List<OrderItemDTO> listOrderItemDTO) {
+        WebClient.Builder builder = WebClient.builder() ;
+        String response = builder.build()
+                .post()
+                .uri("http://localhost:8888/v1/products/lock")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(listOrderItemDTO)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block() ;
+        if (response == null || !response.equals("lock products success")) {
+            throw new ApplicationException("Không lock được sản phẩm") ;
+        }
     }
 }

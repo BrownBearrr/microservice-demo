@@ -73,6 +73,8 @@ public class OrderServiceImpl implements OrderService {
             totalAmount += (price * orderItemDTO.getQuantity());
         }
 
+        productClient.lockProducts(orderDTO.getOrderItems());
+
         orderItemRepository.saveAll(orderItems);
         savedOrder.setTotalAmount(totalAmount);
         savedOrder.setOrderItems(orderItems);

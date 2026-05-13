@@ -2,8 +2,8 @@ package com.example.product_service.controller;
 
 import com.example.product_service.dto.BaseResponse;
 import com.example.product_service.dto.request.CreateProductReq;
-import com.example.product_service.dto.request.ProductFilter;
-import com.example.product_service.entity.BaseEntity;
+import com.example.product_service.dto.request.ProductFilterReq;
+import com.example.product_service.dto.request.ProductLockReq;
 import com.example.product_service.entity.Product;
 import com.example.product_service.service.ProductService;
 import jakarta.validation.Valid;
@@ -30,10 +30,16 @@ public class ProductController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<BaseResponse<List<Product>>> search(@RequestBody ProductFilter productFilter) {
+    public ResponseEntity<BaseResponse<List<Product>>> search(@RequestBody ProductFilterReq productFilter) {
         List<Product> products = productService.search(productFilter);
         return ResponseEntity.ok(new BaseResponse<>(products, "Search products success"));
     }
+
+    @PostMapping("/lock")
+    public String lockProducts(@RequestBody List<ProductLockReq> productLockReq) {
+        return productService.lockProducts(productLockReq) ;
+    }
+
 }
 
 

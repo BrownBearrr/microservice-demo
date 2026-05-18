@@ -62,7 +62,7 @@ public class  ProductServiceImpl implements ProductService {
             productLockReqMap.put(productLockItem.getProductId(), productLockItem) ;
         });
 
-        List<Product> products = productRepository.findAllById(productLockReqIds);
+        List<Product> products = productRepository.findByIdInForUpdate(productLockReqIds);
 
         if (products.size() != productLockReqIds.size()) {
             throw new ApplicationException("Some products not found");

@@ -14,4 +14,6 @@ public interface OrderService {
 
     String deleteById(String id) ;
 
+    void changeStatus(Order order) ;
+
 }

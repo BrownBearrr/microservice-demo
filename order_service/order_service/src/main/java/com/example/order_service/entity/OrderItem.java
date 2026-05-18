@@ -1,6 +1,7 @@
 package com.example.order_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Getter
 @Setter
 @Table(name ="order_items")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderItem {
     @Id
     @GeneratedValue(generator = "uuid")

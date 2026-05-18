@@ -4,6 +4,19 @@ spring :
         username: root
         password: kien1610
     #    driver-class-name: com.mysql.cj.jdbc.Driver
+    kafka:
+        bootstrap-servers: localhost:9092
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer # chuyển String thành byte để gửi đi kafka
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer # chuyển Json thành byte để gửi đi kafka
+        consumer:
+            group-id: order-service # tên nhóm consumer, các consumer cùng nhóm sẽ chia sẻ việc đọc dữ liệu từ topic
+            auto-offset-reset: latest # nếu không có offset nào được lưu trữ - hay được hiểu là lần đầu đăng ký kafka, bắt đầu đọc từ cuối cùng của topic
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # chuyển byte thành String khi nhận được từ kafka
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer # chuyển byte thành String khi nhận được từ kafka sau đó tự parse
+            properties:
+                spring.json.trusted.packages: "*"
+                spring.json.use.type.headers: false
 
     jpa:
         hibernate:

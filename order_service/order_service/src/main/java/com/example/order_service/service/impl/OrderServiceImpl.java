@@ -8,6 +8,7 @@ import com.example.order_service.dto.ProductDTO;
 import com.example.order_service.dto.request.ProductFilter;
 import com.example.order_service.entity.Order;
 import com.example.order_service.entity.OrderItem;
+import com.example.order_service.events.OrderCreatedEvent;
 import com.example.order_service.exception.ApplicationException;
 import com.example.order_service.mapper.OrderMapper;
 import com.example.order_service.repository.OrderItemRepository;
@@ -15,7 +16,9 @@ import com.example.order_service.repository.OrderRepository;
 import com.example.order_service.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,13 +34,14 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final ProductClient productClient;
     private final OrderItemRepository orderItemRepository;
+    private final KafkaTemplate<String,Object> kafkaTemplate ;
 
 
     @Override
     public Order create(OrderDTO orderDTO) {
         List<String> productIds = orderDTO.getOrderItems().stream().map(item -> item.getProductId()).distinct().toList();
 
-        List<ProductDTO> products = productClient.getProductsByIds(new ProductFilter(productIds));
+        List<ProductDTO> products = productClient.getProductsByIds(new ProductFilter(productIds)); // lấy ra thông tin của list Product ở đây
 
         Map<String, ProductDTO> productPriceMap = new HashMap<>();
 
@@ -78,7 +82,18 @@ public class OrderServiceImpl implements OrderService {
         orderItemRepository.saveAll(orderItems);
         savedOrder.setTotalAmount(totalAmount);
         savedOrder.setOrderItems(orderItems);
-        return orderRepository.save(savedOrder);
+
+//        return orderRepository.save(savedOrder); // nếu làm đồng bộ thì có thể return luôn từ bước này do đã lockProducts
+        Order createdOrder = orderRepository.save(savedOrder);
+
+        // do createdOrder đã có orderItems rồi nên đoạn này của anh huấn comment đi
+//        OrderCreatedEvent orderCreatedEvent = orderMapper.toEvent(createdOrder) ;
+//        orderCreatedEvent.setOrderItems(orderItems);
+
+        kafkaTemplate.send("order_created", createdOrder) ; // gửi message sang kafka topic "order_created" với payload là createdOrder
+        log.info("Published order created event to Kafka for order id: {}", createdOrder.getId());
+
+        return  createdOrder ;
     }
 
     @Override
@@ -99,6 +114,14 @@ public class OrderServiceImpl implements OrderService {
 
         }
         return "Deleted successfully";
+    }
+
+    @Override
+    @Transactional
+    public void changeStatus(Order order) {
+        Order orderExisted = orderRepository.getById(order.getId())  ;
+        orderExisted.setStatus(OrderStatus.Processing.name());
+        orderRepository.save(orderExisted) ;
     }
 
 

@@ -75,7 +75,9 @@ public class  ProductServiceImpl implements ProductService {
         RLock lock = redissonClient.getLock(lockKeyPrefix) ; // Tạo object đại diện cho lock ở phía spring
 
         try {
-            // lấy lock trong 10s , giữ lock trong 5s
+            //Kiểm tra key lock đó đã bị giữ chưa
+            //Nếu chưa có ai giữ → tạo key lock trong Redis và lock thành công và sử dụng trong 5 giây, sau 5 giây Redis sẽ tự động giải phóng lock đó
+            //Nếu đã có người giữ → chờ tối đa 10 giây để thử lấy lại lock
             if (lock.tryLock(10,5, TimeUnit.SECONDS)) {
                 Thread.sleep(4000); // giả lập thời gian xử lý công việc là 4s
                 log.info("Acquired lock for key: {}", lockKeyPrefix);

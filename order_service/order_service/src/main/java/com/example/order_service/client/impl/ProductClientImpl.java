@@ -23,10 +23,9 @@ public class ProductClientImpl implements ProductClient {
 
     @Override
     public List<ProductDTO> getProductsByIds(ProductFilter productFilter) {
-        WebClient.Builder builder = WebClient.builder() ;
-        BaseResponse<List<ProductDTO>> response = builder.build()
+        BaseResponse<List<ProductDTO>> response = webClientBuilder.build()
                 .post()
-                .uri("http://localhost:8888/v1/products/search")
+                .uri("http://product-service/v1/products/search")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(productFilter)
@@ -42,10 +41,9 @@ public class ProductClientImpl implements ProductClient {
 
     @Override
     public void lockProducts(List<OrderItemDTO> listOrderItemDTO) {
-        WebClient.Builder builder = WebClient.builder() ;
-        String response = builder.build()
+        String response = webClientBuilder.build()
                 .post()
-                .uri("http://localhost:8888/v1/products/lock")
+                .uri("http://product-service/v1/products/lock")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(listOrderItemDTO)

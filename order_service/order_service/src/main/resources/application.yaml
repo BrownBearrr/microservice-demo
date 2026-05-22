@@ -1,4 +1,6 @@
 spring :
+    application:
+        name: order-service
     datasource:
         url: jdbc:mysql://localhost:3306/micro_orders
         username: root
@@ -25,3 +27,15 @@ spring :
         properties:
             hibernate:
                 format_sql: true
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka/ # URL của Eureka Server
+#
+#logging:
+#    level:
+#        root : debug
+#        org.apache.kafka: warn
+#        org.apache.kafka.clients: warn
+#        org.apache.kafka.common: warn

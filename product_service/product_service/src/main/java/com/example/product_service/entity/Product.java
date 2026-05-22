@@ -13,6 +13,7 @@ public class Product extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid")
     @UuidGenerator
+    @Column(length = 36)
     private String id ;
     private String name ;
     private Integer price ;

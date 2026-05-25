@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
     @Bean
-    @LoadBalanced // spring sẽ tự động load balance giữa các instance của service khi gọi qua WebClient
+    @LoadBalanced // spring sẽ tự động load balance giữa các instance của service khi gọi qua WebClient- giống chức năng của api gateway
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder();
     }

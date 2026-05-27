@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: auth_service
+
+keycloak:
+  realm: mircro-demo # Tên realm trong Keycloak
+  auth-server-url: http://localhost:8080
+  resource: backend
+  credentials:
+    secret: "GlUie5WC1dATylJLVkJdMAG4gV14vjde"
+
+server:
+  port: 8791

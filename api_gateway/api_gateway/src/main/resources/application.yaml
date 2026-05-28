@@ -17,6 +17,13 @@ spring :
                   uri : lb://product-service
                   predicates :
                     - Path=/v1/products/**
+    security:
+        oauth2:
+            resourceserver:
+                jwt :
+                    issuer-uri: http://localhost:8080/realms/mircro-demo # URL của Keycloak Realm
+                    jwk-set-uri: http://localhost:8080/realms/mircro-demo/protocol/openid-connect/certs # URL để lấy public key từ Keycloak
+
 
 eureka:
     client:

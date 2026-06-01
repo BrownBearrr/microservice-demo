@@ -52,7 +52,6 @@ public class OrderCreatedConsumer {
         });
 
         productService.lockProducts(lockProductItems) ;
-
         log.info("Success to lock product item of {}" , orderCreateEvent.getId());
         kafkaTemplate.send("product_lock", orderCreateEvent) ; // gửi message sang kafka topic "order_created" với payload là createdOrder
 

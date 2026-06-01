@@ -21,6 +21,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<BaseResponse<Order>> create(@RequestBody @Valid OrderDTO createOrderReq) {
+        log.info("Create order request: {}", createOrderReq);
         return ResponseEntity.ok(new BaseResponse<>(orderService.create(createOrderReq) , "create order succeess")) ;
     }
 

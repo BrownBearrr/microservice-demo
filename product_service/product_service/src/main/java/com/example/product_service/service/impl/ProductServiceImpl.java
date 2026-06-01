@@ -90,6 +90,7 @@ public class  ProductServiceImpl implements ProductService {
                 });
 
                 List<Product> products = productRepository.findByIdIn(productLockReqIds);
+                log.info("Products to lock: {}", products.stream().map(Product::getId).collect(Collectors.toList()));
 
                 if (products.size() != productLockReqIds.size()) {
                     throw new ApplicationException("Some products not found");

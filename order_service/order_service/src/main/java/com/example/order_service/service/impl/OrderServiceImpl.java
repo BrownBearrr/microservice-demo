@@ -41,7 +41,10 @@ public class OrderServiceImpl implements OrderService {
     public Order create(OrderDTO orderDTO) {
         List<String> productIds = orderDTO.getOrderItems().stream().map(item -> item.getProductId()).distinct().toList();
 
+        log.info("Fetching product details for productIds: {}", productIds);
+
         List<ProductDTO> products = productClient.getProductsByIds(new ProductFilter(productIds)); // lấy ra thông tin của list Product ở đây
+        log.info("Received product details: {}", products);
 
         Map<String, ProductDTO> productPriceMap = new HashMap<>();
 
@@ -54,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.New.name());
         order.setTotalAmount(0);
         Order savedOrder = orderRepository.save(order);
+        log.info("Order created with id: {}", savedOrder.getId());
 
         int totalAmount = 0;
         List<OrderItem> orderItems = new ArrayList<>();

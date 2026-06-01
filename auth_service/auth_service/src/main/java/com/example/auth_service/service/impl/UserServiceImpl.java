@@ -66,12 +66,12 @@ public class UserServiceImpl implements UserService {
         Response response = keycloak.realm(realm).users().create(user);
         if (response.getStatus() != 201) {
             log.info("Status: {}", response.getStatus());
-
             log.info("Headers: {}", response.getHeaders());
             String errorMessage =response.readEntity(Map.class).get("errorMessage").toString();
             log.error("Create user failed: {}", errorMessage);
             throw new RuntimeException(errorMessage);
         }
+        log.info("User created successfully: {}", dto.getUsername());
     }
 
     @Override

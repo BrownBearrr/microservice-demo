@@ -4,16 +4,14 @@ import com.example.product_service.dto.BaseResponse;
 import com.example.product_service.dto.request.CreateProductReq;
 import com.example.product_service.dto.request.ProductFilterReq;
 import com.example.product_service.dto.request.ProductLockReq;
+import com.example.product_service.dto.request.UpdateProductReq;
 import com.example.product_service.entity.Product;
 import com.example.product_service.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<BaseResponse<Product>> create(@RequestBody @Valid CreateProductReq createProductReq) {
-        return ResponseEntity.ok(new BaseResponse<>(productService.create(createProductReq) , "succeess")) ;
+        return ResponseEntity.ok(new BaseResponse<>(productService.create(createProductReq) , "create product succeess")) ;
     }
 
     @PostMapping("/search")
@@ -38,6 +36,16 @@ public class ProductController {
     @PostMapping("/lock")
     public String lockProducts(@RequestBody List<ProductLockReq> productLockReq) {
         return productService.lockProducts(productLockReq) ;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponse<Product>> getById(@PathVariable String id) {
+        return ResponseEntity.ok(new BaseResponse<>(productService.getById(id) , "get product by id succeess")) ;
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<BaseResponse<Product>> update(@RequestBody @Valid UpdateProductReq updateProductReq , @PathVariable String id) {
+        return ResponseEntity.ok(new BaseResponse<>(productService.update(id, updateProductReq), "update product succeess"));
     }
 
 }

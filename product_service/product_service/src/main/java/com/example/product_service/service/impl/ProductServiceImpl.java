@@ -3,6 +3,7 @@ package com.example.product_service.service.impl;
 import com.example.product_service.dto.request.CreateProductReq;
 import com.example.product_service.dto.request.ProductFilterReq;
 import com.example.product_service.dto.request.ProductLockReq;
+import com.example.product_service.dto.request.UpdateProductReq;
 import com.example.product_service.entity.Product;
 import com.example.product_service.exception.ApplicationException;
 import com.example.product_service.mapper.ProductMapper;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +56,7 @@ public class  ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "products", key = "#productFilter.ids" , condition = "#productFilter.ids != null" )
     public List<Product> search(ProductFilterReq productFilter) {
         return productRepository.findByIdIn(productFilter.getIds()) ;
     }
@@ -134,5 +138,41 @@ public class  ProductServiceImpl implements ProductService {
 //        }
 //        productRepository.saveAll(products) ;
          return "lock products success" ;
+    }
+
+    @Override
+    @CacheEvict(value = "products", allEntries = true)
+    public Product update(String id, UpdateProductReq updateProductReq) {
+        var existedProductOptional = productRepository.findById(id) ;
+        if (existedProductOptional.isEmpty()) {
+            throw new ApplicationException("product not found") ;
+        }
+        var existedProduct = existedProductOptional.get() ;
+
+        if (updateProductReq.getCategoryId() != null) {
+            var existedCategoryOptional = categoryRepository.findById(updateProductReq.getCategoryId()) ;
+            if (existedCategoryOptional.isEmpty()) {
+                throw new ApplicationException("category not found") ;
+            }
+        }
+
+        productMapper.fromUpdateRequest(existedProduct,updateProductReq) ;
+
+        return productRepository.save(existedProduct) ;
+    }
+
+//    Map<String,Product> productMap = new HashMap<>() ;
+
+
+    @Override
+    public Product getById(String id) {
+//        if (productMap.containsKey(id)) {
+//            log.info("Get product from cache with id: {}", id);
+//            return productMap.get(id) ;
+//        }
+        Product product = productRepository.findById(id).orElseThrow(() -> new ApplicationException("Product not found")) ;
+//        productMap.put(id , product) ;
+        return product ;
+
     }
 }
